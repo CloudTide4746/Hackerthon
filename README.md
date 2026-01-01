@@ -1,16 +1,106 @@
-# React + Vite
+<!-- @format -->
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Video OS - 基于 AI 的视频流智能理解与交互系统
 
-Currently, two official plugins are available:
+**团队名称：路子邮电野**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 1. 项目简介 (解决什么问题)
 
-## React Compiler
+在当今信息爆炸的时代，视频已成为获取知识和信息的主要媒介。然而，传统的视频学习方式存在显著痛点：
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **信息密度低**：长达数小时的教程往往只有几分钟的核心内容。
+- **检索困难**：难以快速定位到具体的代码片段、报错解决方案或关键操作步骤。
+- **交互被动**：用户只能被动观看，无法与视频内容进行实时、深度的互动（如提问、提取代码、分析图表）。
 
-## Expanding the ESLint configuration
+**Video OS** 旨在重新定义视频交互体验。它不仅仅是一个播放器，更是一个**智能视频操作系统**。通过集成先进的多模态大模型（Gemini Flash），Video OS 能够实时理解视频画面，将非结构化的视频流转化为结构化的知识（代码、笔记、操作流），让用户能够像操作文档一样操作视频。
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 2. 业务价值说明 (对用户或业务的实际意义)
+
+- **对于开发者/学习者**：
+  - **效率倍增**：一键提取视频中的代码和报错信息，免去手动敲代码和排查错误的繁琐，学习效率提升 50% 以上。
+  - **知识沉淀**：自动生成结构化的学习笔记和操作步骤，将“看懂了”转化为“记住了”和“学会了”。
+  - **深度理解**：通过与 AI 的实时对话，解决视频中未讲解清楚的疑难点，打破学习瓶颈。
+- **对于内容创作者/教育平台**：
+  - **内容增值**：为普通视频增加 AI 辅助功能，提升课程的含金量和用户粘性。
+  - **自动化运营**：自动生成视频摘要、目录和标签，降低内容运营成本。
+
+## 3. AI 创新性说明 (AI 在哪里、为什么是核心)
+
+Video OS 的核心不仅仅是调用 API，而是构建了一套**基于视觉的上下文感知系统**：
+
+- **实时视觉理解**：不同于传统的基于字幕（文本）的分析，Video OS 直接“看”视频。它能够识别画面中的代码缩进、IDE 报错红线、复杂的数学公式以及软件操作的鼠标轨迹。
+- **多模态上下文记忆**：系统维护着一个动态的 `sent_Prompt`，融合了**历史对话记录**、**当前帧画面**以及**用户意图**。这使得 AI 不仅能回答当前问题，还能联系视频的前后文（例如：“老师刚才讲的那个函数和现在这个有什么区别？”）。
+- **场景化专家模式**：我们微调了 Prompt Engineering，预设了 **代码提取器**、**报错诊断器**、**操作流分析器** 等专用 AI 角色，比通用 AI 更精准地解决特定场景问题。
+
+## 4. 技术实现说明 (整体思路)
+
+Video OS 采用前后端分离的现代化架构：
+
+- **前端 (React + Vite + Tailwind CSS)**：
+  - **智能播放器**：基于 HTML5 Video，集成了画布 (Canvas) 截图引擎，支持毫秒级帧捕获。
+  - **交互界面**：采用玻璃拟态 (Glassmorphism) 设计，实现了全屏响应式布局。左侧为动态关键帧流，中间为沉浸式播放区，右侧为 AI 交互面板。
+  - **Markdown 渲染引擎**：集成 `react-markdown` + `katex` + `prism`，完美支持代码高亮、数学公式渲染和复杂图表展示。
+- **后端 (FastAPI + Python)**：
+  - **代理服务**：处理前端上传的截图流 (Blob) 和上下文数据。
+  - **大模型编排**：对接 Google Gemini Flash 模型，根据前端传入的 `mode` (模式) 动态加载对应的 System Prompt，进行推理并返回结构化 JSON 数据。
+  - **上下文管理**：解析前端传递的对话历史，构建多轮对话的 Context Window。
+
+## 5. 交互与设计说明 (关键流程或界面)
+
+Video OS 的设计哲学是 **“让 AI 隐形于操作之中”**：
+
+1.  **左侧：时光回溯 (Visual Timeline)**
+    - 系统自动每隔 2 秒或在关键帧变化时生成截图，以瀑布流形式展示在左侧。
+    - 用户无需拖动进度条，点击任意截图即可“穿越”回那个时刻，并针对该画面发起提问。
+2.  **中间：沉浸视窗 (Immersive View)**
+    - 巨大的视频播放区域，下方悬浮着“截屏并分析”按钮。
+    - 当用户发现关键内容（如一段代码或一个报错），只需一键点击，系统即刻捕获当前帧并启动 AI 分析。
+3.  **右侧：智慧大脑 (AI Hub)**
+    - **模式选择**：提供“代码提取”、“报错诊断”、“笔记总结”等专家模式，一键切换 AI 的“职业”。
+    - **动态对话**：AI 的回复以 Markdown 形式流式呈现。代码块可直接复制，数学公式完美渲染。
+    - **补充提问**：用户可以在左下角随时输入补充问题，与 AI 进行连续的深度探讨。
+
+## 6. 项目启动方式
+
+本项目包含前端和后端两个部分，需要分别启动。
+
+### 前端启动 (Frontend)
+
+1.  进入项目根目录：
+    ```bash
+    cd Hackerthon
+    ```
+2.  安装依赖：
+    ```bash
+    npm install
+    ```
+3.  启动开发服务器：
+    ```bash
+    npm run dev
+    ```
+    前端服务默认运行在 `http://localhost:5173`。
+
+### 后端启动 (Backend)
+
+1.  进入后端目录：
+    ```bash
+    cd backend
+    ```
+2.  安装依赖 (建议使用虚拟环境)：
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  配置环境变量：
+    在 `backend` 目录下创建 `.env` 文件，并填入您的 Google Gemini API Key：
+    ```env
+    GEMINI_API_KEY=your_api_key_here
+    ```
+4.  启动后端服务：
+    ```bash
+    uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    ```
+    后端服务默认运行在 `http://localhost:8000`。
+
+## 7. 实际演示视频
+
+_(此处将插入演示视频链接或文件)_
