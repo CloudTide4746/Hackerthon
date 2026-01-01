@@ -86,12 +86,12 @@ export function Dashboard() {
     const imageUrl = canvas.toDataURL("image/jpeg");
 
     setScreenshots((prev) => [
-      ...prev,
       {
         id: Date.now() + Math.random(),
         time: Math.round(time),
         url: imageUrl,
       },
+      ...prev,
     ]);
   };
 
@@ -128,12 +128,12 @@ export function Dashboard() {
         // Also add to screenshots list for UI consistency
         const imageUrl = URL.createObjectURL(blob);
         setScreenshots((prev) => [
-          ...prev,
           {
             id: Date.now() + Math.random(),
             time: video.currentTime,
             url: imageUrl,
           },
+          ...prev,
         ]);
 
         processUpload(blob);
@@ -214,7 +214,7 @@ export function Dashboard() {
 
   return (
     <div className='min-h-screen bg-slate-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-950 to-slate-950'>
-      <div className='container mx-auto px-4 py-8 max-w-[1800px]'>
+      <div className='w-full px-6 py-8'>
         <div className='mb-8 flex items-end gap-4'>
           <h2 className='text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent tracking-tight'>
             视频理解助手
@@ -224,39 +224,78 @@ export function Dashboard() {
           </p>
         </div>
 
-        <div className='grid grid-cols-1 lg:grid-cols-12 gap-6'>
-          {/* 左侧主要区域：视频 + 截图画廊 */}
-          <div className='lg:col-span-8 flex flex-col gap-6'>
-            <VideoPlayer
-              videoUrl={videoUrl}
-              videoRef={videoRef}
-              canvasRef={canvasRef}
-              onFileUpload={handleFileUpload}
-              onTimeUpdate={handleTimeUpdate}
-              onSeeked={handleSeeked}
-              onClear={handleClear}
-              onCaptureAndAnalyze={handleCaptureAndAnalyze}
-            />
-            <ScreenshotGallery
-              screenshots={screenshots}
-              onUpload={handleUploadScreenshot}
-            />
+        <div className='grid grid-cols-[180px_1fr_400px] gap-6 h-[calc(100vh-12rem)]'>
+          {/* 左侧边栏：截图画廊 + 补充提问 (固定 180px) */}
+          <div className='h-full flex flex-col gap-4 overflow-hidden'>
+            {/* 截图画廊 */}
+            <div className='flex-1 min-h-0'>
+              <ScreenshotGallery
+                screenshots={screenshots}
+                onUpload={handleUploadScreenshot}
+              />
+            </div>
+
+            {/* 补充问题输入框 */}
+            <div className='h-[200px] flex-shrink-0 relative group z-10'>
+              <div className='absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl opacity-0 group-focus-within:opacity-30 transition-opacity duration-300 blur'></div>
+              <div className='relative bg-slate-900 border border-slate-700 rounded-xl overflow-hidden flex flex-col shadow-lg h-full'>
+                {isLoading && (
+                  <div className='absolute top-0 left-0 right-0 h-1 z-20'>
+                    <div className='h-full bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-500 bg-[length:200%_100%] animate-gradient-x'></div>
+                  </div>
+                )}
+                <textarea
+                  value={customPrompt}
+                  onChange={(e) => setCustomPrompt(e.target.value)}
+                  disabled={isLoading}
+                  placeholder={
+                    isLoading ? "正在处理中..." : "在此输入补充问题..."
+                  }
+                  className='w-full h-full bg-transparent p-4 text-slate-200 focus:outline-none resize-none text-sm leading-relaxed placeholder:text-slate-600 disabled:opacity-50'
+                />
+                <div className='absolute bottom-0 left-0 right-0 bg-slate-800/50 px-3 py-2 flex justify-between items-center border-t border-slate-700/50 backdrop-blur-sm'>
+                  <span className='text-xs text-slate-500 font-medium pl-1'>
+                    {customPrompt.length} 字
+                  </span>
+                  <div className='flex items-center gap-2'>
+                    <span className='text-[10px] text-slate-500 bg-slate-700/50 px-2 py-1 rounded'>
+                      随截图发送
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* 右侧边栏：功能选择 + 聊天面板 */}
-          <div className='lg:col-span-4 flex flex-col gap-6 h-[calc(100vh-8rem)] sticky top-4'>
-            <div className='flex-shrink-0 max-h-[40%] flex flex-col'>
-              <AssistantPanel mode={mode} setMode={setMode} />
+          {/* 中间主要区域：视频 + 聊天 (自适应) */}
+          <div className='h-full flex flex-col gap-4 min-w-0'>
+            {/* 视频区域：自适应剩余高度 */}
+            <div className='flex-1 min-h-0'>
+              <VideoPlayer
+                videoUrl={videoUrl}
+                videoRef={videoRef}
+                canvasRef={canvasRef}
+                onFileUpload={handleFileUpload}
+                onTimeUpdate={handleTimeUpdate}
+                onSeeked={handleSeeked}
+                onClear={handleClear}
+                onCaptureAndAnalyze={handleCaptureAndAnalyze}
+              />
             </div>
-            <div className='flex-grow min-h-0 flex flex-col'>
+
+            {/* 聊天区域：固定高度 */}
+            <div className='h-[450px] flex-shrink-0'>
               <ChatPanel
                 history={history}
-                customPrompt={customPrompt}
-                setCustomPrompt={setCustomPrompt}
                 onClearHistory={handleClearHistory}
                 isLoading={isLoading}
               />
             </div>
+          </div>
+
+          {/* 右侧边栏：功能选择 (固定 400px) */}
+          <div className='h-full'>
+            <AssistantPanel mode={mode} setMode={setMode} />
           </div>
         </div>
       </div>

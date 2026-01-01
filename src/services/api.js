@@ -59,7 +59,8 @@ export const uploadImage = async (
     // 假设 API 路径为 /upload
     // 如果实际路径不同，请在此处修改
     const response = await apiClient.post("/upload", formData);
-
+    //如果成功，控制台输出"Backend Response Received"
+    console.log("Backend Response Received:", response.data);
     return response.data;
   } catch (error) {
     console.error("API Error (uploadImage):", error);

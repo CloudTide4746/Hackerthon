@@ -14,9 +14,9 @@ export function VideoPlayer({
   onCaptureAndAnalyze,
 }) {
   return (
-    <div className='glass-card rounded-2xl p-6 relative overflow-hidden shadow-2xl shadow-black/20 group/card'>
+    <div className='glass-card rounded-2xl p-6 relative overflow-hidden shadow-2xl shadow-black/20 group/card h-full flex flex-col'>
       {!videoUrl ? (
-        <div className='h-[400px] flex flex-col items-center justify-center border-2 border-dashed border-slate-700/50 rounded-xl bg-slate-900/30 hover:bg-slate-900/50 hover:border-indigo-500/50 transition-all duration-300 group cursor-pointer relative overflow-hidden'>
+        <div className='h-full flex flex-col items-center justify-center border-2 border-dashed border-slate-700/50 rounded-xl bg-slate-900/30 hover:bg-slate-900/50 hover:border-indigo-500/50 transition-all duration-300 group cursor-pointer relative overflow-hidden'>
           <div className='absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
           <input
             type='file'
@@ -35,13 +35,13 @@ export function VideoPlayer({
           </p>
         </div>
       ) : (
-        <div className='space-y-4'>
-          <div className='relative w-full bg-black rounded-xl overflow-hidden group shadow-2xl ring-1 ring-white/10'>
+        <div className='flex-1 flex flex-col min-h-0 gap-4'>
+          <div className='relative w-full bg-black rounded-xl overflow-hidden group shadow-2xl ring-1 ring-white/10 flex-1 flex items-center justify-center'>
             <video
               ref={videoRef}
               src={videoUrl}
               controls
-              className='w-full h-auto max-h-[500px] object-contain mx-auto'
+              className='w-full h-full max-h-full object-contain'
               onTimeUpdate={onTimeUpdate}
               onSeeked={onSeeked}
               crossOrigin='anonymous'
@@ -57,7 +57,7 @@ export function VideoPlayer({
 
           <button
             onClick={onCaptureAndAnalyze}
-            className='w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl font-bold text-lg shadow-lg shadow-indigo-900/30 hover:shadow-indigo-900/50 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-3 group relative overflow-hidden'
+            className='flex-shrink-0 w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl font-bold text-lg shadow-lg shadow-indigo-900/30 hover:shadow-indigo-900/50 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-3 group relative overflow-hidden'
           >
             <div className='absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300' />
             <ScanEye className='w-6 h-6 relative z-10' />
