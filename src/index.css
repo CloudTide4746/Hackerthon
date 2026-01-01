@@ -1,0 +1,35 @@
+/** @format */
+
+@import "tailwindcss";
+
+@layer theme {
+  :root {
+    --color-slate-950: #020617;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-50 antialiased;
+  }
+}
+
+@utility glass-card {
+  @apply bg-slate-900/50 backdrop-blur-lg border border-slate-800/50;
+}
+
+@utility text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400;
+}
+
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    @apply bg-slate-900/50 rounded-full;
+  }
+  &::-webkit-scrollbar-thumb {
+    @apply bg-slate-700/50 rounded-full hover:bg-indigo-500/50 transition-colors;
+  }
+}
