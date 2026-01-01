@@ -9,22 +9,6 @@ export function Home() {
   const setPosts = useStore((state) => state.setPosts);
   const [loading, setLoading] = useState(true); // 加载状态
   const [error, setError] = useState(null); // 错误处理
-  // 页面加载时抓取数据
-  useEffect(() => {
-    axios
-      .get("https://jsonplaceholder.typicode.com/posts?_limit=5") // 限制只拿5条，省得刷屏
-      .then((response) => {
-        // 关键点：Axios 拿到的数据在 response.data 中
-        setPosts(response.data);
-        setLoading(false);
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.error("API 调用失败:", err);
-        setError("无法连接到服务器");
-        setLoading(false);
-      });
-  }, []);
   return (
     <div className='min-h-screen relative overflow-hidden'>
       {/* Background decoration */}

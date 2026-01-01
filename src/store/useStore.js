@@ -15,6 +15,6 @@ export const useStore = create((set) => ({
         t.id === id ? { ...t, ...updatedTask } : t
       ),
     })),
-    posts: [],
-    setPosts: (posts) => set({ posts }),
+  posts: [],
+  setPosts: (posts) => set({ posts }),
 }));
