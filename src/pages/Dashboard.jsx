@@ -14,6 +14,7 @@ export function Dashboard() {
   // State: Mode, Custom Prompt, History
   const [mode, setMode] = useState("general-explainer");
   const [customPrompt, setCustomPrompt] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Load history from localStorage
   const [history, setHistory] = useState(() => {
@@ -142,52 +143,57 @@ export function Dashboard() {
 
   // Centralized upload logic
   const processUpload = async (blob) => {
-    try {
-      // Construct prompt: history + current custom prompt
-      // We format history as a string for the backend if needed,
-      // OR we just send the new user prompt and let backend handle context?
-      // Assuming backend takes a string 'sent_Prompt'.
+    if (isLoading) return;
 
+    try {
+      setIsLoading(true);
+
+      // Construct prompt: history + current custom prompt
       const historyText = history
         .map((h) => `${h.role === "user" ? "User" : "AI"}: ${h.content}`)
         .join("\n");
-      const fullPrompt = customPrompt
+
+      // sent_Prompt should include history and the new question if any
+      const sent_Prompt = customPrompt
         ? `${historyText}\nUser: ${customPrompt}`
-        : historyText;
+        : historyText || "请总结当前图片内容";
 
-      console.log("Uploading with:", { mode, fullPrompt });
+      console.log("Uploading with:", {
+        mode,
+        sent_Prompt,
+        if_ask: customPrompt ? 1 : 0,
+      });
 
-      // Add pending user message to UI immediately for better UX?
-      // Maybe wait for success to avoid false state.
-
-      const result = await uploadImage(blob, mode, fullPrompt, customPrompt);
+      // Call API
+      const result = await uploadImage(blob, mode, sent_Prompt, customPrompt);
       console.log("Upload success:", result);
 
-      // Update history
-      const newHistory = [...history];
-
+      // Update history with user's message if there was one
+      const newMessages = [];
       if (customPrompt.trim()) {
-        newHistory.push({
+        newMessages.push({
           role: "user",
           content: customPrompt,
           timestamp: Date.now(),
         });
       }
 
-      // Assuming result has a 'description' or 'message' field
-      if (result && (result.description || result.message)) {
-        newHistory.push({
+      // Add AI's response from result.message
+      if (result && result.message) {
+        newMessages.push({
           role: "ai",
-          content: result.description || result.message,
+          content: result.message,
           timestamp: Date.now(),
         });
       }
 
-      setHistory(newHistory);
+      setHistory((prev) => [...prev, ...newMessages]);
       setCustomPrompt(""); // Clear input
     } catch (error) {
       console.error("Upload failed:", error);
       alert("上传失败，请检查控制台");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -248,6 +254,7 @@ export function Dashboard() {
                 customPrompt={customPrompt}
                 setCustomPrompt={setCustomPrompt}
                 onClearHistory={handleClearHistory}
+                isLoading={isLoading}
               />
             </div>
           </div>

@@ -8,7 +8,7 @@ const API_BASE_URL = "http://10.60.185.80:8000";
 // 创建 axios 实例
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 20000, // 20秒超时
+  timeout: 60000, // 20秒超时
 });
 
 /**
