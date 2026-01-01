@@ -8,7 +8,7 @@ const API_BASE_URL = "http://10.60.185.80:8000";
 // 创建 axios 实例
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 5000, // 5秒超时
+  timeout: 20000, // 20秒超时
 });
 
 /**
@@ -36,24 +36,29 @@ export const dataURLtoBlob = (dataURL) => {
  * @param {Blob | File} imageFile - 要上传的图片文件或 Blob
  * @returns {Promise<any>} - 后端响应数据
  */
-export const uploadImage = async (imageFile, mode, sent_Prompt) => {
+export const uploadImage = async (
+  imageFile,
+  mode,
+  sent_Prompt,
+  usermessage
+) => {
   try {
     const formData = new FormData();
     // 注意：这里的 'file' 必须与后端接收的字段名一致
     // FastAPI 默认 UploadFile 参数名通常为 file，但也可能不同
-    formData.append("file", imageFile, "screenhsot.jpg");
-    formData.append("mode", mode);
-    formData.append("sent_Prompt", sent_Prompt);
+    formData.append("file", imageFile, "screenshot.jpg");
+    formData.append("mode", mode || "general-explainer");
+    formData.append("sent_Prompt", sent_Prompt || "请分析这张图片");
+    formData.append(
+      "if_ask",
+      usermessage && usermessage.trim() !== "" ? "1" : "0"
+    );
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
     // 假设 API 路径为 /upload
     // 如果实际路径不同，请在此处修改
-    const response = await apiClient.post("/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await apiClient.post("/upload", formData);
 
     return response.data;
   } catch (error) {

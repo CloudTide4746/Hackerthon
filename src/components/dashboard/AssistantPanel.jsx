@@ -1,110 +1,163 @@
-import React from 'react';
+/** @format */
 
-export function AssistantPanel({ 
-  mode, 
-  setMode, 
-  history, 
-  customPrompt, 
-  setCustomPrompt 
-}) {
+import React from "react";
+import {
+  Bot,
+  Sparkles,
+  BrainCircuit,
+  Languages,
+  Scan,
+  User,
+  BookOpen,
+  FileText,
+  Calculator,
+  BarChart,
+  ShoppingBag,
+} from "lucide-react";
+
+export function AssistantPanel({ mode, setMode }) {
+  const assistants = [
+    {
+      category: "看视频常用",
+      items: [
+        {
+          id: "general-explainer",
+          name: "视频内容解说",
+          desc: "看不懂在演什么？AI帮你解释场景和剧情",
+          icon: BrainCircuit,
+        },
+        {
+          id: "language-translator",
+          name: "外语翻译助手",
+          desc: "识别外语字幕或对话，实时翻译成中文",
+          icon: Languages,
+        },
+        {
+          id: "object-identifier",
+          name: "物品识别助手",
+          desc: "画面里是什么东西？AI告诉你名称和用途",
+          icon: Scan,
+        },
+        {
+          id: "character-analyzer",
+          name: "人物识别助手",
+          desc: "这是哪位演员/人物？AI帮你识别和介绍",
+          icon: User,
+        },
+      ],
+    },
+    {
+      category: "学习好帮手",
+      items: [
+        {
+          id: "lecture-notes",
+          name: "课程笔记助手",
+          desc: "把教学视频截图变笔记，提取重点知识点",
+          icon: BookOpen,
+        },
+        {
+          id: "text-extractor",
+          name: "文字提取助手",
+          desc: "提取PPT、文档中的文字，方便复习和记录",
+          icon: FileText,
+        },
+        {
+          id: "math-helper",
+          name: "数学解题助手",
+          desc: "看不懂数学公式？AI逐步讲解解题方法",
+          icon: Calculator,
+        },
+        {
+          id: "diagram-explainer",
+          name: "图表解释助手",
+          desc: "看不懂图表数据？AI分析趋势和结论",
+          icon: BarChart,
+        },
+      ],
+    },
+    {
+      category: "生活小助手",
+      items: [
+        {
+          id: "product-identifier",
+          name: "商品识别助手",
+          desc: "种草了？AI帮你识别商品并找同款",
+          icon: ShoppingBag,
+        },
+      ],
+    },
+  ];
+
   return (
-    <div className='glass-card rounded-2xl p-6 h-full min-h-[600px] flex flex-col sticky top-8'>
-      <div className="flex items-center gap-2 mb-6 border-b border-slate-700/50 pb-4">
-         <svg className="w-6 h-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-         </svg>
-         <h3 className="text-xl font-bold text-slate-100">智能助手控制台</h3>
+    <div className='glass-card rounded-2xl p-6 h-full flex flex-col shadow-2xl shadow-black/20 ring-1 ring-white/5 relative overflow-hidden'>
+      {/* 背景装饰 */}
+      <div className='absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none'></div>
+
+      <div className='flex items-center gap-3 mb-6 pb-4 border-b border-slate-700/50 relative z-10'>
+        <div className='p-2 bg-indigo-500/10 rounded-lg'>
+          <Sparkles className='w-6 h-6 text-indigo-400' />
+        </div>
+        <div>
+          <h3 className='text-xl font-bold text-slate-100 tracking-tight'>
+            功能模式
+          </h3>
+          <p className='text-xs text-slate-400'>选择适合当前场景的AI助手</p>
+        </div>
       </div>
 
-      {/* 模式选择 */}
-      <div className="bg-slate-900/50 p-1 rounded-xl flex mb-6 border border-slate-700/50">
-        <button
-          onClick={() => setMode("recognition")}
-          className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
-            mode === "recognition"
-              ? "bg-indigo-600 text-white shadow-lg shadow-indigo-900/20"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-          }`}
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          智能识别
-        </button>
-        <button
-          onClick={() => setMode("custom")}
-          className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
-            mode === "custom"
-              ? "bg-purple-600 text-white shadow-lg shadow-purple-900/20"
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-          }`}
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-          </svg>
-          自定义提问
-        </button>
-      </div>
-
-      {/* 动态内容区域 */}
-      <div className="flex-1 flex flex-col gap-4">
-        {mode === "recognition" ? (
-          <div className="flex-1 bg-slate-800/30 rounded-xl p-6 border border-slate-700/50 flex flex-col items-center justify-center text-center">
-            <div className="w-16 h-16 bg-indigo-500/10 rounded-full flex items-center justify-center mb-4">
-              <svg className="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-              </svg>
-            </div>
-            <h4 className="text-lg font-medium text-slate-200 mb-2">智能分析模式已就绪</h4>
-            <p className="text-slate-400 text-sm max-w-xs">
-              点击左侧任意关键帧的“分析”按钮，AI 将自动识别画面内容并生成摘要。
-            </p>
-          </div>
-        ) : (
-          <div className="flex-1 flex flex-col gap-4">
-            {/* 历史记录展示 */}
-            <div className="flex-1 bg-slate-800/30 rounded-xl p-4 border border-slate-700/50 overflow-y-auto max-h-[300px] custom-scrollbar">
-              {history.length === 0 ? (
-                <p className="text-slate-500 text-sm text-center mt-10">暂无提问历史</p>
-              ) : (
-                <div className="space-y-3">
-                  {history.map((item, index) => (
-                    <div key={index} className="flex gap-3">
-                      <div className="w-8 h-8 rounded-full bg-purple-500/20 flex-shrink-0 flex items-center justify-center text-purple-400 text-xs">
-                        Q{index + 1}
+      <div className='flex-1 overflow-y-auto custom-scrollbar pr-2 -mr-2 relative z-10'>
+        <div className='space-y-6'>
+          {assistants.map((category, idx) => (
+            <div key={idx} className='space-y-3'>
+              <h4 className='text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2 pl-1'>
+                <span className='w-1.5 h-1.5 rounded-full bg-indigo-500'></span>
+                {category.category}
+              </h4>
+              <div className='grid grid-cols-1 gap-3'>
+                {category.items.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setMode(item.id)}
+                    className={`text-left p-4 rounded-xl border transition-all duration-300 group relative overflow-hidden ${
+                      mode === item.id
+                        ? "bg-indigo-600/10 border-indigo-500/50 shadow-lg shadow-indigo-900/10"
+                        : "bg-slate-800/30 border-slate-700/50 hover:border-slate-600 hover:bg-slate-800/50 hover:translate-x-1"
+                    }`}
+                  >
+                    {mode === item.id && (
+                      <div className='absolute top-2 right-2 w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)] animate-pulse'></div>
+                    )}
+                    <div className='flex items-start gap-3'>
+                      <div
+                        className={`mt-1 p-2.5 rounded-xl transition-colors duration-300 ${
+                          mode === item.id
+                            ? "bg-indigo-500/20 text-indigo-300"
+                            : "bg-slate-700/30 text-slate-400 group-hover:text-slate-300"
+                        }`}
+                      >
+                        <item.icon className='w-5 h-5' />
                       </div>
-                      <div className="bg-slate-700/50 rounded-lg rounded-tl-none p-3 text-sm text-slate-300">
-                        {item}
+                      <div>
+                        <div
+                          className={`font-bold mb-1 transition-colors duration-300 ${
+                            mode === item.id
+                              ? "text-indigo-200"
+                              : "text-slate-200 group-hover:text-white"
+                          }`}
+                        >
+                          {item.name}
+                        </div>
+                        <div className='text-xs text-slate-400 leading-relaxed line-clamp-2'>
+                          {item.desc}
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 输入框 */}
-            <div className="relative">
-              <textarea
-                value={customPrompt}
-                onChange={(e) => setCustomPrompt(e.target.value)}
-                placeholder="输入您的问题，例如：'画面中的人物在做什么？'"
-                className="w-full h-32 bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-slate-200 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all resize-none"
-              />
-              <div className="absolute bottom-3 right-3 text-xs text-slate-500">
-                {customPrompt.length} 字
+                  </button>
+                ))}
               </div>
             </div>
-            
-            <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3 flex items-start gap-3">
-              <svg className="w-5 h-5 text-blue-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-xs text-blue-200/80 leading-relaxed">
-                提示：您的提问将与历史记录合并，作为完整的上下文发送给 AI。点击左侧截图的“分析”按钮即可发送。
-              </p>
-            </div>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );
