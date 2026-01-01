@@ -1,6 +1,7 @@
 /** @format */
 
 import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { uploadImage, dataURLtoBlob } from "../services/api";
 import { VideoPlayer } from "../components/dashboard/VideoPlayer";
 import { ScreenshotGallery } from "../components/dashboard/ScreenshotGallery";
@@ -215,26 +216,28 @@ export function Dashboard() {
   return (
     <div className='min-h-screen bg-slate-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-950 to-slate-950'>
       <div className='w-full px-6 py-8'>
-        <div className='mb-8 flex items-end gap-4'>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className='mb-8 flex items-end gap-4'
+        >
           <h2 className='text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent tracking-tight'>
             视频理解助手
           </h2>
           <p className='text-slate-400 pb-1.5 font-medium'>
             让视频内容一目了然
           </p>
-        </div>
+        </motion.div>
 
         <div className='grid grid-cols-[180px_1fr_400px] gap-6 h-[calc(100vh-12rem)]'>
           {/* 左侧边栏：截图画廊 + 补充提问 (固定 180px) */}
-          <div className='h-full flex flex-col gap-4 overflow-hidden'>
-            {/* 截图画廊 */}
-            <div className='flex-1 min-h-0'>
-              <ScreenshotGallery
-                screenshots={screenshots}
-                onUpload={handleUploadScreenshot}
-              />
-            </div>
-
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            className='h-full flex flex-col gap-4 overflow-hidden'
+          >
             {/* 补充问题输入框 */}
             <div className='h-[200px] flex-shrink-0 relative group z-10'>
               <div className='absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl opacity-0 group-focus-within:opacity-30 transition-opacity duration-300 blur'></div>
@@ -265,10 +268,23 @@ export function Dashboard() {
                 </div>
               </div>
             </div>
-          </div>
+
+            {/* 截图画廊 */}
+            <div className='flex-1 min-h-0'>
+              <ScreenshotGallery
+                screenshots={screenshots}
+                onUpload={handleUploadScreenshot}
+              />
+            </div>
+          </motion.div>
 
           {/* 中间主要区域：视频 + 聊天 (自适应) */}
-          <div className='h-full flex flex-col gap-4 min-w-0'>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+            className='h-full flex flex-col gap-4 min-w-0'
+          >
             {/* 视频区域：自适应剩余高度 */}
             <div className='flex-1 min-h-0'>
               <VideoPlayer
@@ -291,12 +307,17 @@ export function Dashboard() {
                 isLoading={isLoading}
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* 右侧边栏：功能选择 (固定 400px) */}
-          <div className='h-full'>
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+            className='h-full'
+          >
             <AssistantPanel mode={mode} setMode={setMode} />
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
