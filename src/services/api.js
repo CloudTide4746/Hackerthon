@@ -44,6 +44,7 @@ export const uploadImage = async (
 ) => {
   try {
     const formData = new FormData();
+    // <div className="md:"></div>
     // 注意：这里的 'file' 必须与后端接收的字段名一致
     // FastAPI 默认 UploadFile 参数名通常为 file，但也可能不同
     formData.append("file", imageFile, "screenshot.jpg");

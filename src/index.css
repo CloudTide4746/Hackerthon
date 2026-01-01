@@ -1,15 +1,22 @@
 /** @format */
 
 @import "tailwindcss";
+@import "katex/dist/katex.min.css";
 
 @layer theme {
   :root {
     --color-slate-950: #020617;
   }
   @keyframes gradient-x {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
   .animate-gradient-x {
     animation: gradient-x 2s ease infinite;

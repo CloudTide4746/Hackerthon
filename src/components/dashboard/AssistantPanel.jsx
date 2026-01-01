@@ -6,17 +6,43 @@ import {
   Sparkles,
   BrainCircuit,
   Languages,
-  Scan,
-  User,
-  BookOpen,
+  Code,
+  Workflow,
   FileText,
-  Calculator,
-  BarChart,
-  ShoppingBag,
+  Bug,
 } from "lucide-react";
 
 export function AssistantPanel({ mode, setMode }) {
   const assistants = [
+    {
+      category: "开发者/设计师专用",
+      items: [
+        {
+          id: "code_extractor",
+          name: "⚡️ 代码一键提取",
+          desc: "识别屏幕上的代码，保持缩进和格式，直接可复制",
+          icon: Code,
+        },
+        {
+          id: "workflow_analyzer",
+          name: "🛠️ 操作步骤拆解",
+          desc: "忽略废话，只把老师的操作动作整理成 Step 1, Step 2",
+          icon: Workflow,
+        },
+        {
+          id: "smart_summarizer",
+          name: "📝 智能重点笔记",
+          desc: "识别 PPT 或板书内容，总结核心知识点",
+          icon: FileText,
+        },
+        {
+          id: "bug_fixer",
+          name: "🐛 报错自动诊断",
+          desc: "视频里出现红色报错信息时，截图分析报错原因并给出修复建议",
+          icon: Bug,
+        },
+      ],
+    },
     {
       category: "看视频常用",
       items: [
@@ -31,58 +57,6 @@ export function AssistantPanel({ mode, setMode }) {
           name: "外语翻译助手",
           desc: "识别外语字幕或对话，实时翻译成中文",
           icon: Languages,
-        },
-        {
-          id: "object-identifier",
-          name: "物品识别助手",
-          desc: "画面里是什么东西？AI告诉你名称和用途",
-          icon: Scan,
-        },
-        {
-          id: "character-analyzer",
-          name: "人物识别助手",
-          desc: "这是哪位演员/人物？AI帮你识别和介绍",
-          icon: User,
-        },
-      ],
-    },
-    {
-      category: "学习好帮手",
-      items: [
-        {
-          id: "lecture-notes",
-          name: "课程笔记助手",
-          desc: "把教学视频截图变笔记，提取重点知识点",
-          icon: BookOpen,
-        },
-        {
-          id: "text-extractor",
-          name: "文字提取助手",
-          desc: "提取PPT、文档中的文字，方便复习和记录",
-          icon: FileText,
-        },
-        {
-          id: "math-helper",
-          name: "数学解题助手",
-          desc: "看不懂数学公式？AI逐步讲解解题方法",
-          icon: Calculator,
-        },
-        {
-          id: "diagram-explainer",
-          name: "图表解释助手",
-          desc: "看不懂图表数据？AI分析趋势和结论",
-          icon: BarChart,
-        },
-      ],
-    },
-    {
-      category: "生活小助手",
-      items: [
-        {
-          id: "product-identifier",
-          name: "商品识别助手",
-          desc: "种草了？AI帮你识别商品并找同款",
-          icon: ShoppingBag,
         },
       ],
     },
