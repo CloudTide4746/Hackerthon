@@ -7,6 +7,7 @@ import { VideoPlayer } from "../components/dashboard/VideoPlayer";
 import { ScreenshotGallery } from "../components/dashboard/ScreenshotGallery";
 import { AssistantPanel } from "../components/dashboard/AssistantPanel";
 import { ChatPanel } from "../components/dashboard/ChatPanel";
+import { CodeEditorPanel } from "../components/dashboard/CodeEditorPanel";
 
 export function Dashboard() {
   const [videoUrl, setVideoUrl] = useState(null);
@@ -16,6 +17,17 @@ export function Dashboard() {
   const [mode, setMode] = useState("general-explainer");
   const [customPrompt, setCustomPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [extractedCode, setExtractedCode] = useState("// 暂无提取的代码");
+  const [showCodeEditor, setShowCodeEditor] = useState(false);
+
+  // Update showCodeEditor when mode changes
+  useEffect(() => {
+    if (mode === "code_extractor") {
+      setShowCodeEditor(true);
+    } else {
+      setShowCodeEditor(false);
+    }
+  }, [mode]);
 
   // Load history from localStorage
   const [history, setHistory] = useState(() => {
@@ -186,6 +198,20 @@ export function Dashboard() {
           content: result.message,
           timestamp: Date.now(),
         });
+
+        // Try to extract code from the response if in code extractor mode
+        if (mode === "code_extractor") {
+          const codeMatch = result.message.match(/```[\w]*\n([\s\S]*?)```/);
+          if (codeMatch && codeMatch[1]) {
+            setExtractedCode(codeMatch[1]);
+          } else {
+            // Fallback: assume the whole message might be code if it looks like it,
+            // or just set the message as comments if no code block found
+            setExtractedCode(
+              `// 未检测到明确的代码块\n// AI回复内容:\n/*\n${result.message}\n*/`
+            );
+          }
+        }
       }
 
       setHistory((prev) => [...prev, ...newMessages]);
@@ -299,13 +325,39 @@ export function Dashboard() {
               />
             </div>
 
-            {/* 聊天区域：固定高度 */}
+            {/* 聊天区域：固定高度，根据模式切换显示内容 */}
             <div className='h-[450px] flex-shrink-0'>
-              <ChatPanel
-                history={history}
-                onClearHistory={handleClearHistory}
-                isLoading={isLoading}
-              />
+              {showCodeEditor ? (
+                <div className='h-full flex gap-4'>
+                  {/* 代码编辑器 (占大部分宽度) */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className='flex-1 min-w-0'
+                  >
+                    <CodeEditorPanel code={extractedCode} />
+                  </motion.div>
+
+                  {/* 聊天面板 (缩小版，占小部分宽度) */}
+                  <motion.div
+                    className='w-[300px] flex-shrink-0'
+                    initial={{ width: "100%" }}
+                    animate={{ width: "300px" }}
+                  >
+                    <ChatPanel
+                      history={history}
+                      onClearHistory={handleClearHistory}
+                      isLoading={isLoading}
+                    />
+                  </motion.div>
+                </div>
+              ) : (
+                <ChatPanel
+                  history={history}
+                  onClearHistory={handleClearHistory}
+                  isLoading={isLoading}
+                />
+              )}
             </div>
           </motion.div>
 
