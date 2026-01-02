@@ -97,7 +97,7 @@ Video OS 的设计哲学是 **“让 AI 隐形于操作之中”**：
     ```
 4.  启动后端服务：
     ```bash
-    uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    uvicorn app.main:app --reload
     ```
     后端服务默认运行在 `http://localhost:8000`。
 
