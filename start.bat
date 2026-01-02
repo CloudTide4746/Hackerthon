@@ -10,7 +10,7 @@ if not exist "node_modules" (
     echo Installing frontend dependencies...
     call npm install
 ) else (
-    echo Frontend dependencies installed
+    echo Frontend dependencies ready.
 )
 echo.
 
@@ -23,20 +23,19 @@ if not exist "venv" (
     echo Installing backend dependencies...
     pip install -r requirements.txt
 ) else (
-    echo Backend dependencies installed
-    call venv\Scripts\activate
+    echo Backend dependencies ready.
 )
+cd ..
 echo.
 
 echo [3/4] Starting backend service...
-start "Video OS Backend" cmd /k "cd /d %~dp0Backend && venv\Scripts\activate && uvicorn app.main:app --reload"
-echo Backend service starting... (http://localhost:8000)
+echo Starting backend in a new window...
+start "Video OS Backend" cmd /k "cd /d %~dp0Backend && echo Activating venv... && venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
 echo.
 
 echo [4/4] Starting frontend service...
-cd ..
+echo Starting frontend in a new window...
 start "Video OS Frontend" cmd /k "cd /d %~dp0 && npm run dev"
-echo Frontend service starting... (http://localhost:5173)
 echo.
 
 echo ========================================
@@ -46,5 +45,6 @@ echo   Backend: http://localhost:8000
 echo   API Docs: http://localhost:8000/docs
 echo ========================================
 echo.
-echo Close this window to stop services
+echo Please do not close this window immediately.
+echo You can close the separate Frontend/Backend windows to stop them.
 pause
