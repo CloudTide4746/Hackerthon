@@ -3,7 +3,8 @@
 import axios from "axios";
 
 // API 基础地址
-const API_BASE_URL = "http://10.60.185.80:8000";
+// const API_BASE_URL = "http://10.60.185.80:8000";
+const API_BASE_URL = "http://localhost:8000";
 
 // 创建 axios 实例
 const apiClient = axios.create({
@@ -44,9 +45,7 @@ export const uploadImage = async (
 ) => {
   try {
     const formData = new FormData();
-    // <div className="md:"></div>
-    // 注意：这里的 'file' 必须与后端接收的字段名一致
-    // FastAPI 默认 UploadFile 参数名通常为 file，但也可能不同
+
     formData.append("file", imageFile, "screenshot.jpg");
     formData.append("mode", mode || "general-explainer");
     formData.append("sent_Prompt", sent_Prompt || "请分析这张图片");
@@ -57,10 +56,9 @@ export const uploadImage = async (
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
-    // 假设 API 路径为 /upload
-    // 如果实际路径不同，请在此处修改
+
     const response = await apiClient.post("/upload", formData);
-    //如果成功，控制台输出"Backend Response Received"
+
     console.log("Backend Response Received:", response.data);
     return response.data;
   } catch (error) {

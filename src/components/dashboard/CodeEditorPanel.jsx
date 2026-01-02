@@ -2,10 +2,10 @@
 
 import React from "react";
 import Editor from "@monaco-editor/react";
-import { Code, Copy, Check } from "lucide-react";
+import { Code, Copy, Check, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-export function CodeEditorPanel({ code, language = "javascript" }) {
+export function CodeEditorPanel({ code, language = "javascript", onClear }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -39,6 +39,13 @@ export function CodeEditorPanel({ code, language = "javascript" }) {
               <Copy className='w-4 h-4' />
             )}
           </button>
+          <button
+            onClick={onClear}
+            className='p-1.5 hover:bg-red-500/10 rounded-lg text-slate-400 hover:text-red-400 transition-colors'
+            title='清空'
+          >
+            <Trash2 className='w-4 h-4' />
+          </button>
         </div>
       </div>
 
@@ -58,7 +65,7 @@ export function CodeEditorPanel({ code, language = "javascript" }) {
             scrollBeyondLastLine: false,
             readOnly: true,
             padding: { top: 16, bottom: 16 },
-            backgroundColor: "transparent", 
+            backgroundColor: "transparent",
           }}
           // Monaco's default background needs override for transparency if desired,
           // but usually vs-dark is fine. To match glassmorphism, we might need CSS overrides.

@@ -335,7 +335,10 @@ export function Dashboard() {
                     animate={{ opacity: 1, x: 0 }}
                     className='flex-1 min-w-0'
                   >
-                    <CodeEditorPanel code={extractedCode} />
+                    <CodeEditorPanel
+                      code={extractedCode}
+                      onClear={() => setExtractedCode("// 暂无提取的代码")}
+                    />
                   </motion.div>
 
                   {/* 聊天面板 (缩小版，占小部分宽度) */}
